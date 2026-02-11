@@ -6,12 +6,11 @@ from aiogram.filters import CommandStart
 from urllib.parse import quote
 import os
 
-TOKEN = os.getenv("BOT_TOKEN") or os.getenv("TOKEN")
+TOKEN = os.getenv("BOT_TOKEN") or os.getenv("TOKEN") # os.getenv("TOKEN")
 
 bot = Bot(token=TOKEN)
 dp = Dispatcher()
 
-# Обновленный список товаров (добавил прокси сюда)
 ITEMS = {
     "view_stars_50": {
         "name": "50 Звезд⭐️",
@@ -51,8 +50,6 @@ ITEMS = {
     }
 }
 
-# --- КЛАВИАТУРЫ ---
-
 def get_start_kb():
     builder = InlineKeyboardBuilder()
     builder.row(
@@ -89,7 +86,9 @@ def get_proxy_kb():
     
     return builder.as_markup()
 
-# --- ХЕНДЛЕРЫ ---
+# -----------------------------------------------------------------------------------------------------
+
+# --- хендлерсы мои любимые
 
 @dp.message(CommandStart())
 async def cmd_start(message: Message):
@@ -126,7 +125,6 @@ async def stars_menu_callback(callback: CallbackQuery):
 @dp.callback_query(F.data == "cat_proxy")
 async def proxy_menu_callback(callback: CallbackQuery):
     await callback.message.delete()
-    # ТУТ БЫЛА ОШИБКА. Заменил заглушку на реальную ссылку.
     proxy_main_photo = "https://i.pinimg.com/736x/a6/29/d2/a629d280a01f0f504c01151d25bca62a.jpg"
     await callback.message.answer_photo(
         photo=proxy_main_photo, 
@@ -185,7 +183,7 @@ async def show_item(callback: CallbackQuery):
     
     builder = InlineKeyboardBuilder()
     builder.row(InlineKeyboardButton(text="💳 Оформить заказ", url=pay_url))
-    # Возврат в каталог (к категориям)
+
     builder.row(InlineKeyboardButton(text="⬅️ Назад в каталог", callback_data="open_catalog"))
     
     await callback.message.answer_photo(
@@ -200,7 +198,7 @@ async def show_item(callback: CallbackQuery):
 async def proxy_help_callback(callback: CallbackQuery):
     await callback.message.delete()
     
-    help_photo = "https://i.pinimg.com/736x/a6/29/d2/a629d280a01f0f504c01151d25bca62a.jpg" # Твоя картинка
+    help_photo = "https://i.pinimg.com/736x/a6/29/d2/a629d280a01f0f504c01151d25bca62a.jpg"
     
     builder = InlineKeyboardBuilder()
     builder.row(InlineKeyboardButton(text="⬅️ Назад к прокси", callback_data="cat_proxy"))
@@ -213,7 +211,7 @@ async def proxy_help_callback(callback: CallbackQuery):
             "• <b>Локации ::</b> Германия 🇩🇪, Нидерланды 🇳🇱, США 🇺🇸\n"
             "• <b>Подробнее ::</b> <a href='https://t.me/ExoticShopKanal/79'>Клик...</a>\n"
             "• <b>Гайд по Proxy ::</b> <a href='https://t.me/ExoticShopKanal/89'>Клик...</a>\n\n"
-            "<i>После оплаты менеджер выдаст данные в формате ip:port@login:password</i>"
+            "<i>После оплаты менеджер выдаст данные в формате ip:port@login:password</i>" #"<i>ip:port:login:password</i>"
         ),
         parse_mode="HTML",
         reply_markup=builder.as_markup()
@@ -224,4 +222,5 @@ async def main():
     await dp.start_polling(bot)
 
 if __name__ == "__main__":
+
     asyncio.run(main())
